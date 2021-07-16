@@ -101,5 +101,5 @@ void writeToFile (){
 		fprintf (fp,"%s ",a.mainScramble[loop]);
 	}
 	fprintf(fp,"\n");
-	close(fp);
+	fclose(fp);
 }
