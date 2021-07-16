@@ -16,7 +16,7 @@ const int SLEN=25;
 
 //Structure which holds main scramble
 struct GetScramble{
-	char mainScramble [SLEN][3];
+	char mainScramble [25][3];
 };struct GetScramble a;//Its object
 
 //Function prototypes to avoid bugs
