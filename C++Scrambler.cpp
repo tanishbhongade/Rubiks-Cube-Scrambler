@@ -8,15 +8,15 @@ int randomNum()
 	int a = rand() % (100 +1);
 	return a;
 }
-int main() { 
+
+int scrambler() { 
 	char setArray[6] = {'U', 'F', 'B', 'D', 'R', 'L'};
 	srand(time(0)); 
 	int i = 0;
 	char completedMove; 
 	int totalNum;
-	int inputLength = 25;
-	/*cout << "Please input length of scramble: ";
-	cin >> inputLength;*/
+	int inputLength = 20;
+	
 	while(i++ < inputLength) { 
 		bool doTwo = false;
 		bool addOne = false;
@@ -64,7 +64,26 @@ int main() {
 
 	}
 	cout << "\n";
-
-	system("pause>0");
-	// return 0; 
 } 
+
+void doNothing(){
+
+}
+
+int main(){
+	std::cout<<"r for reload and e for exit" <<std::endl;
+	char reload;
+	while (true)
+	{
+		scrambler();
+		std::cin>>reload;
+		while (reload!='r')
+		{
+			doNothing();
+		}
+		if (reload=='e')
+		{
+			exit(0);
+		}
+	}
+}
