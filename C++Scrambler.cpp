@@ -3,6 +3,7 @@
 #include <winuser.h>
 #include <cstdlib>
 #include <ctime>
+#include <cstdio>
 #include "allFuncHeaders.h"
 using namespace std;
 

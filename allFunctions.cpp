@@ -3,6 +3,7 @@
 #include <winuser.h>
 #include <cstdlib>
 #include <ctime>
+#include <cstdio>
 using namespace std;
 
 inline void doNothing()
@@ -11,6 +12,7 @@ inline void doNothing()
 
 int randomNum()
 {
+	// Generates a random integer
 	int a = rand() % (100 + 1);
 	return a;
 }
@@ -56,7 +58,8 @@ int scrambler(char *scrambleArray)
 				{
 					// cout << turn << "2";
 					scrambleArray[j] = turn;
-					scrambleArray[++j] = '2';
+					j++;
+					scrambleArray[j] = '2';
 					// scrambleArray[++j]=' ';
 					j++;
 				}
@@ -64,7 +67,8 @@ int scrambler(char *scrambleArray)
 				{
 					// cout << turn << "'";
 					scrambleArray[j] = turn;
-					scrambleArray[++j] = char(39);
+					j++;
+					scrambleArray[j] = char(39);
 					// scrambleArray[++j]=' ';
 					j++;
 				}
@@ -75,7 +79,8 @@ int scrambler(char *scrambleArray)
 				{
 					// cout << turn << "2";
 					scrambleArray[j] = turn;
-					scrambleArray[++j] = '2';
+					j++;
+					scrambleArray[j] = '2';
 					// scrambleArray[++j]=' ';
 					j++;
 				}
@@ -90,7 +95,8 @@ int scrambler(char *scrambleArray)
 			if (ignore == false)
 			{
 				// cout << " ";
-				scrambleArray[j++] = ' ';
+				scrambleArray[j] = ' ';
+				j++;
 			}
 		}
 
@@ -137,22 +143,57 @@ inline bool ePressed()
 
 void phaseOne()
 {
-	clock_t initialTime = 0;
-	clock_t finalTime = 0;
+	// This function is solely responsible for calculating time passed between solve
+	clock_t initialTime = 0; // This variable holds initial time
+	clock_t finalTime = 0;	 // This variable holds final time
 
 	std::cout << "Solve!" << std::endl;
-	initialTime = clock();
+	initialTime = clock(); // Assigning initial time
 	while (spacePressed() == false)
 	{
+		// This spacePressed()==false will ensure to do nothing if space is not pressed.
 		if (spacePressed() == true)
 		{
-			finalTime = clock();
+			// As soon as space is pressed
+			finalTime = clock(); // Record time after solve
 			while (spacePressed() == true)
 			{
+				// Keep doing nothing after once time has been captured and space is kept pressed
 				doNothing();
 			}
-			std::cout << "Time passed is " <<double(double(finalTime-initialTime)/double(CLOCKS_PER_SEC));
-			break;
+			// After leaving space bar, print time passed.
+			std::cout << "Time passed is " << double(double(finalTime - initialTime) / double(CLOCKS_PER_SEC));
+			break; // break and let control reach to runTimer function
+		}
+	}
+}
+
+void phaseTwo()
+{
+	while (true)
+	{
+		// After phaseOne() runs until R is not pressed, do nothing
+		if (rPressed() == false)
+		{
+			doNothing();
+			// Keep checking whether e is not pressed or not
+			if (ePressed() == true)
+			{
+				// If e is pressed exit the program
+				exit(0);
+			}
+		}
+		// If r is pressed, enter else if statement
+		else if (rPressed() == true)
+		{
+			while (rPressed() == true)
+			{
+				//Once r is pressed, keep doing nothing if r is pressed more than once
+				doNothing();
+			}
+			// Clear terminal after doing all this
+			system("cls");
+			return;// Go back to runTimer()
 		}
 	}
 }
@@ -161,39 +202,27 @@ void runTimer(char *scrambleArray)
 {
 	while (true)
 	{
+		// Start running printScramble
 		printScramble(scrambleArray);
 		while (spacePressed() == false)
 		{
+			// Until space bar is not pressed keep doing nothing
 			doNothing();
 		}
 		if (spacePressed() == true)
 		{
+			// As soon as space is pressed enter this if condition
 			std::cout << "Space pressed!" << std::endl;
 			while (spacePressed() == true)
 			{
+				// Once this loop is entered it will keep doing nothing until space is pressed
 				doNothing();
 			}
-			phaseOne();
-			while (true)
-			{
-				if (rPressed() == false)
-				{
-					doNothing();
-					if (ePressed() == true)
-					{
-						exit(0);
-					}
-				}
-				else if (rPressed() == true)
-				{
-					while (rPressed() == true)
-					{
-						doNothing();
-					}
-					system("cls");
-					runTimer(scrambleArray);
-				}
-			}
+			phaseOne(); // As soon as space is leaved, enter phaseOne() and it'll do it's job
+			fflush(stdin);
+			phaseTwo();
+			fflush(stdin);
+			// break;
 		}
 	}
 }
