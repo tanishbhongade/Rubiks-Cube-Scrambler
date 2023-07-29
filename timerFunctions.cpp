@@ -4,7 +4,22 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdio>
-using namespace std;
+#include "libraries/mainHeader.h"
+
+inline bool spacePressed()
+{
+	return (GetAsyncKeyState(VK_SPACE) == 0) ? false : true;
+}
+
+inline bool rPressed()
+{
+	return (GetAsyncKeyState(0x52) == 0) ? false : true;
+}
+
+inline bool ePressed()
+{
+	return (GetAsyncKeyState(0x45) == 0) ? false : true;
+}
 
 inline void doNothing()
 {
@@ -17,12 +32,12 @@ int randomNum()
 	return a;
 }
 
-int scrambler(char *scrambleArray)
+void scrambler(char* scrambleArray)
 {
-	char setArray[6] = {'U', 'F', 'B', 'D', 'R', 'L'};
+	char setArray[6] = { 'U', 'F', 'B', 'D', 'R', 'L' };
 	srand(time(0));
 	int i = 1;
-	char completedMove;
+	char completedMove=0;
 	int totalNum;
 	int inputLength = 20;
 	int j = 0;
@@ -39,7 +54,7 @@ int scrambler(char *scrambleArray)
 		{
 			addOne = true;
 		}
-		if ((((initNon)*3) % 10) > 3)
+		if ((((initNon) * 3) % 10) > 3)
 		{
 			doTwo = true;
 		}
@@ -102,10 +117,10 @@ int scrambler(char *scrambleArray)
 
 		completedMove = turn;
 	}
-	cout << "\n";
+	std::cout <<std::endl;
 }
 
-void printScramble(char *scrambleArray)
+void printScramble(char* scrambleArray)
 {
 	int i = 0;
 
@@ -126,20 +141,7 @@ void printScramble(char *scrambleArray)
 	std::cout << std::endl;
 }
 
-inline bool spacePressed()
-{
-	return (GetAsyncKeyState(VK_SPACE) == 0) ? 0 : 1;
-}
 
-inline bool rPressed()
-{
-	return (GetAsyncKeyState(0x52) == 0) ? 0 : 1;
-}
-
-inline bool ePressed()
-{
-	return (GetAsyncKeyState(0x45) == 0) ? 0 : 1;
-}
 
 void phaseOne()
 {
@@ -149,27 +151,29 @@ void phaseOne()
 
 	std::cout << "Solve!" << std::endl;
 	initialTime = clock(); // Assigning initial time
+
 	while (spacePressed() == false)
 	{
 		// This spacePressed()==false will ensure to do nothing if space is not pressed.
-		if (spacePressed() == true)
+		doNothing();
+	}
+	if (spacePressed() == true)
+	{
+		// As soon as space is pressed
+		finalTime = clock(); // Record time after solve
+		while (spacePressed() == true)
 		{
-			// As soon as space is pressed
-			finalTime = clock(); // Record time after solve
-			while (spacePressed() == true)
-			{
-				// Keep doing nothing after once time has been captured and space is kept pressed
-				doNothing();
-			}
-			// After leaving space bar, print time passed.
-			std::cout << "Time passed is " << double(double(finalTime - initialTime) / double(CLOCKS_PER_SEC));
-			break; // break and let control reach to runTimer function
+			// Keep doing nothing after once time has been captured and space is kept pressed
+			doNothing();
 		}
+		// After leaving space bar, print time passed.
+		std::cout << "Time passed is " << double(double(finalTime - initialTime) / double(CLOCKS_PER_SEC));
 	}
 }
 
 void phaseTwo()
 {
+	//std::cout << "Inside phaseTwo() timer" << std::endl;
 	while (true)
 	{
 		// After phaseOne() runs until R is not pressed, do nothing
@@ -198,31 +202,29 @@ void phaseTwo()
 	}
 }
 
-void runTimer(char *scrambleArray)
-{
-	while (true)
+void beforeTimerRuns() {
+	while (spacePressed() == false)
 	{
-		// Start running printScramble
-		printScramble(scrambleArray);
-		while (spacePressed() == false)
+		// Until space bar is not pressed keep doing nothing
+		doNothing();
+	}
+	if (spacePressed() == true)
+	{
+		// As soon as space is pressed enter this if condition
+		std::cout << "Space pressed!" << std::endl;
+		while (spacePressed() == true)
 		{
-			// Until space bar is not pressed keep doing nothing
+			// Once this loop is entered it will keep doing nothing until space is pressed
 			doNothing();
 		}
-		if (spacePressed() == true)
-		{
-			// As soon as space is pressed enter this if condition
-			std::cout << "Space pressed!" << std::endl;
-			while (spacePressed() == true)
-			{
-				// Once this loop is entered it will keep doing nothing until space is pressed
-				doNothing();
-			}
-			phaseOne(); // As soon as space is leaved, enter phaseOne() and it'll do it's job
-			fflush(stdin);
-			phaseTwo();
-			fflush(stdin);
-			// break;
-		}
+		return;
 	}
+}
+
+void runTimer(char* scrambleArray)
+{
+	printScramble(scrambleArray);
+	beforeTimerRuns();
+	phaseOne();
+	phaseTwo();
 }
