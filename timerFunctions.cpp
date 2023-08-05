@@ -32,12 +32,12 @@ int randomNum()
 	return a;
 }
 
-void scrambler(char* scrambleArray)
+void scrambler(char *scrambleArray)
 {
-	char setArray[6] = { 'U', 'F', 'B', 'D', 'R', 'L' };
+	char setArray[6] = {'U', 'F', 'B', 'D', 'R', 'L'};
 	srand(time(0));
 	int i = 1;
-	char completedMove=0;
+	char completedMove = 0;
 	int totalNum;
 	int inputLength = 20;
 	int j = 0;
@@ -54,7 +54,7 @@ void scrambler(char* scrambleArray)
 		{
 			addOne = true;
 		}
-		if ((((initNon) * 3) % 10) > 3)
+		if ((((initNon)*3) % 10) > 3)
 		{
 			doTwo = true;
 		}
@@ -117,10 +117,10 @@ void scrambler(char* scrambleArray)
 
 		completedMove = turn;
 	}
-	std::cout <<std::endl;
+	std::cout << std::endl;
 }
 
-void printScramble(char* scrambleArray)
+void printScramble(char *scrambleArray)
 {
 	int i = 0;
 
@@ -140,8 +140,6 @@ void printScramble(char* scrambleArray)
 	}
 	std::cout << std::endl;
 }
-
-
 
 void phaseOne()
 {
@@ -173,7 +171,7 @@ void phaseOne()
 
 void phaseTwo()
 {
-	//std::cout << "Inside phaseTwo() timer" << std::endl;
+	// std::cout << "Inside phaseTwo() timer" << std::endl;
 	while (true)
 	{
 		// After phaseOne() runs until R is not pressed, do nothing
@@ -192,17 +190,18 @@ void phaseTwo()
 		{
 			while (rPressed() == true)
 			{
-				//Once r is pressed, keep doing nothing if r is pressed more than once
+				// Once r is pressed, keep doing nothing if r is pressed more than once
 				doNothing();
 			}
 			// Clear terminal after doing all this
 			system("cls");
-			return;// Go back to runTimer()
+			return; // Go back to runTimer()
 		}
 	}
 }
 
-void beforeTimerRuns() {
+void beforeTimerRuns()
+{
 	while (spacePressed() == false)
 	{
 		// Until space bar is not pressed keep doing nothing
@@ -221,9 +220,36 @@ void beforeTimerRuns() {
 	}
 }
 
-void runTimer(char* scrambleArray)
+void runTimer(char *scrambleArray)
 {
 	printScramble(scrambleArray);
+	while (rPressed() == false && spacePressed() == false && ePressed() == false)
+	{
+		// While r is not pressed, space is not pressed and e is not pressed, do nothing
+		doNothing();
+	}
+	while (rPressed() == true && ePressed() == false && spacePressed() == false)
+	{
+		// While r is pressed, space is not pressed and e is not pressed, do nothing
+		doNothing();
+	}
+	if (rPressed() == false && ePressed() == false && spacePressed() == false)
+	{
+		// After releasing r, clear screen and return to main()
+		system("cls");
+		return;
+	}
+	while (ePressed() == false && spacePressed() == false && rPressed() == false)
+	{
+		// While e is pressed, space is not pressed, r is not pressed, do nothing
+		doNothing();
+	}
+	if (ePressed() == true && spacePressed() == false && rPressed() == false)
+	{
+		// If e is pressed, the program will stop execution
+		exit(0);
+	}
+
 	beforeTimerRuns();
 	phaseOne();
 	phaseTwo();
