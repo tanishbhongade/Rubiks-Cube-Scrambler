@@ -4,7 +4,11 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdio>
+#include <vector>
 #include "libraries/mainHeader.h"
+
+const char moveSet[] = {'R', 'U', 'F', 'D', 'L', 'B'};
+const char moveSpecSet[] = {' ', '2', char(39)};
 
 inline bool spacePressed()
 {
@@ -25,120 +29,128 @@ inline void doNothing()
 {
 }
 
-int randomNum()
+inline int randomNum(int lowerLimit, int upperLimit)
 {
-	// Generates a random integer
-	int a = rand() % (100 + 1);
-	return a;
+	// Generates scramble between the specified limit
+	return (lowerLimit + (rand() % (upperLimit + 1)));
 }
 
-void scrambler(char *scrambleArray)
+char getOppositeMove(char move)
 {
-	char setArray[6] = {'U', 'F', 'B', 'D', 'R', 'L'};
-	srand(time(0));
-	int i = 1;
-	char completedMove = 0;
-	int totalNum;
-	int inputLength = 20;
-	int j = 0;
-
-	while (i++ < 40)
+	// Returns opposite move
+	if (move == 'R')
 	{
-		bool doTwo = false;
-		bool addOne = false;
-		bool ignore = false;
-		int r = randomNum();
-		int initFirst = (r % 10);
-		int initNon = ((int)(r / 10));
-		if ((initNon) > 5)
-		{
-			addOne = true;
-		}
-		if ((((initNon)*3) % 10) > 3)
-		{
-			doTwo = true;
-		}
-		if (initFirst > 5)
-		{
-			initFirst = initFirst / 2;
-		}
-		char turn;
-		turn = setArray[initFirst];
-		r /= 10;
-		if (turn != completedMove)
-		{
-			if (addOne == true && ignore == false)
-			{
-				if (doTwo == true)
-				{
-					// cout << turn << "2";
-					scrambleArray[j] = turn;
-					j++;
-					scrambleArray[j] = '2';
-					// scrambleArray[++j]=' ';
-					j++;
-				}
-				else
-				{
-					// cout << turn << "'";
-					scrambleArray[j] = turn;
-					j++;
-					scrambleArray[j] = char(39);
-					// scrambleArray[++j]=' ';
-					j++;
-				}
-			}
-			else if (addOne != true && ignore == false)
-			{
-				if (doTwo == true)
-				{
-					// cout << turn << "2";
-					scrambleArray[j] = turn;
-					j++;
-					scrambleArray[j] = '2';
-					// scrambleArray[++j]=' ';
-					j++;
-				}
-				else
-				{
-					// cout << turn;
-					scrambleArray[j] = turn;
-					// scrambleArray[++j]=turn;
-					j++;
-				}
-			}
-			if (ignore == false)
-			{
-				// cout << " ";
-				scrambleArray[j] = ' ';
-				j++;
-			}
-		}
-
-		completedMove = turn;
+		// L is opposite of R
+		return 'L';
 	}
-	std::cout << std::endl;
+	else if (move == 'U')
+	{
+		// Same as first condition
+		return 'D';
+	}
+	else if (move == 'F')
+	{
+		return 'B';
+	}
+	else if (move == 'D')
+	{
+		return 'U';
+	}
+	else if (move == 'L')
+	{
+		return 'R';
+	}
+	else if (move == 'B')
+	{
+		return 'F';
+	}
 }
 
-void printScramble(char *scrambleArray)
+std::vector<char> scrambler()
 {
-	int i = 0;
+	// Responsible for generation of scramble
+	char previousMove, currentMove; // Variables
+	int moveToDo, moveSpecToDo;		// Indexes for moveSet and moveSpecialisationSet
+	int scramblePt = 1;				// Shows current scramble point
+	std::vector<char> scramble;		// Helper scramble vector for generating scramble
 
-	scrambler(scrambleArray);
+	// Set up initial move and move specialisation
+	moveToDo = randomNum(0, 5);
+	moveSpecToDo = randomNum(0, 2);
 
-	while (i < 100)
+	// Push move to scramble vector
+	currentMove = moveSet[moveToDo];
+	scramble.push_back(currentMove);
+
+	if (moveSpecToDo != 0)
 	{
-		if (scrambleArray[i] == 'R' || scrambleArray[i] == 'U' || scrambleArray[i] == 'F' || scrambleArray[i] == 'D' || scrambleArray[i] == 'B' || scrambleArray[i] == 'L' || scrambleArray[i] == char(39) || scrambleArray[i] == '2' || scrambleArray[i] == ' ')
+		// If moveSpec != 0 there are two conditions possible
+		if (moveSpecToDo == 1)
 		{
-			std::cout << scrambleArray[i];
-			i++;
+			// If double move is chosen, push double move to scramble
+			scramble.push_back('2');
+			scramble.push_back(' ');
 		}
-		else
+		else if (moveSpecToDo == 2)
 		{
-			break;
+			// If inverse is chosen, push inverted comma to scramble
+			scramble.push_back(char(39));
+			scramble.push_back(' ');
 		}
 	}
-	std::cout << std::endl;
+	else if (moveSpecToDo == 0)
+	{
+		// If standard move is chosen, push blank to scramble
+		scramble.push_back(' ');
+	}
+
+	// Main scramble generation loop
+	while (scramblePt <= 20)
+	{
+		// Set up initial move and move specialisation
+		moveToDo = randomNum(0, 5);
+		moveSpecToDo = randomNum(0, 2);
+
+		previousMove = currentMove;		 // Make previousMove = currentMove
+		currentMove = moveSet[moveToDo]; // Assign currentMove as new generated move
+
+		while (previousMove == currentMove || previousMove == getOppositeMove(currentMove))
+		{
+			// Keep generating currentMove until previousMove and currentMove are not equal or previousMove and currentMove's opposite move are not equal
+			moveToDo = randomNum(0, 5);
+			currentMove = moveSet[moveToDo];
+		}
+		// After generating currentMove, push it to scramble vector
+		scramble.push_back(currentMove);
+
+		if (moveSpecToDo != 0)
+		{
+			// If moveSpec != 0 there are two conditions possible
+			if (moveSpecToDo == 1)
+			{
+				// If double move is chosen, push double move to scramble
+				scramble.push_back('2');
+				scramble.push_back(' ');
+			}
+			else if (moveSpecToDo == 2)
+			{
+				// If inverse is chosen, push inverted comma to scramble
+				scramble.push_back(char(39));
+				scramble.push_back(' ');
+			}
+		}
+		else if (moveSpecToDo == 0)
+		{
+			// If standard move is chosen, push blank-space to scramble
+			scramble.push_back(' ');
+		}
+		// After completing each move, increment scramblePt
+		scramblePt++;
+	}
+	// After everything, make last character as newline in scramble vector
+	scramble.push_back('\n');
+	// Return scramble vector
+	return scramble;
 }
 
 void phaseOne()
@@ -222,7 +234,15 @@ void beforeTimerRuns()
 
 void runTimer(char *scrambleArray)
 {
-	printScramble(scrambleArray);
+	// printScramble(scrambleArray);
+	srand(time(0));
+	std::vector<char> scramble = scrambler();
+	for (int i = 0; i < scramble.size(); i++)
+	{
+		// Prints scramble
+		std::cout << scramble.at(i);
+	}
+
 	while (rPressed() == false && spacePressed() == false && ePressed() == false)
 	{
 		// While r is not pressed, space is not pressed and e is not pressed, do nothing
