@@ -7,32 +7,36 @@
 #include <vector>
 #include "libraries/mainHeader.h"
 
-const char moveSet[] = {'R', 'U', 'F', 'D', 'L', 'B'};
-const char moveSpecSet[] = {' ', '2', char(39)};
+constexpr char moveSet[] = {'R', 'U', 'F', 'D', 'L', 'B'};
+constexpr char moveSpecSet[] = {' ', '2', char(39)};
 
 inline bool spacePressed()
 {
+	// Return false if spacebar is pressed else true
 	return (GetAsyncKeyState(VK_SPACE) == 0) ? false : true;
 }
 
 inline bool rPressed()
 {
+	// Return false if R is pressed else true
 	return (GetAsyncKeyState(0x52) == 0) ? false : true;
 }
 
 inline bool ePressed()
 {
+	// Return false if E is pressed else true
 	return (GetAsyncKeyState(0x45) == 0) ? false : true;
 }
 
 inline void doNothing()
 {
+	// Does as its name
 }
 
 inline int randomNum(int lowerLimit, int upperLimit)
 {
 	// Generates scramble between the specified limit
-	return (lowerLimit + (rand() % (upperLimit + 1)));
+	return (lowerLimit + (rand() % (upperLimit - lowerLimit + 1)));
 }
 
 char getOppositeMove(char move)
@@ -72,7 +76,8 @@ std::vector<char> scrambler()
 	char previousMove, currentMove; // Variables
 	int moveToDo, moveSpecToDo;		// Indexes for moveSet and moveSpecialisationSet
 	int scramblePt = 1;				// Shows current scramble point
-	std::vector<char> scramble;		// Helper scramble vector for generating scramble
+	int scrambleLength = randomNum(20, 25);
+	std::vector<char> scramble; // Helper scramble vector for generating scramble
 
 	// Set up initial move and move specialisation
 	moveToDo = randomNum(0, 5);
@@ -84,19 +89,9 @@ std::vector<char> scrambler()
 
 	if (moveSpecToDo != 0)
 	{
-		// If moveSpec != 0 there are two conditions possible
-		if (moveSpecToDo == 1)
-		{
-			// If double move is chosen, push double move to scramble
-			scramble.push_back('2');
-			scramble.push_back(' ');
-		}
-		else if (moveSpecToDo == 2)
-		{
-			// If inverse is chosen, push inverted comma to scramble
-			scramble.push_back(char(39));
-			scramble.push_back(' ');
-		}
+		// If moveSpecToDo==1 append '2' or if moveSpecToDo==2 append inverted comma
+		scramble.push_back(moveSpecSet[moveSpecToDo]);
+		scramble.push_back(' ');
 	}
 	else if (moveSpecToDo == 0)
 	{
@@ -105,7 +100,7 @@ std::vector<char> scrambler()
 	}
 
 	// Main scramble generation loop
-	while (scramblePt <= 20)
+	while (scramblePt <= scrambleLength)
 	{
 		// Set up initial move and move specialisation
 		moveToDo = randomNum(0, 5);
@@ -125,19 +120,9 @@ std::vector<char> scrambler()
 
 		if (moveSpecToDo != 0)
 		{
-			// If moveSpec != 0 there are two conditions possible
-			if (moveSpecToDo == 1)
-			{
-				// If double move is chosen, push double move to scramble
-				scramble.push_back('2');
-				scramble.push_back(' ');
-			}
-			else if (moveSpecToDo == 2)
-			{
-				// If inverse is chosen, push inverted comma to scramble
-				scramble.push_back(char(39));
-				scramble.push_back(' ');
-			}
+			// If moveSpecToDo==1 append '2' or if moveSpecToDo==2 append inverted comma
+			scramble.push_back(moveSpecSet[moveSpecToDo]);
+			scramble.push_back(' ');
 		}
 		else if (moveSpecToDo == 0)
 		{
