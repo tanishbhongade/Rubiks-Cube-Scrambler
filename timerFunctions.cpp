@@ -7,8 +7,10 @@
 #include <vector>
 #include "libraries/mainHeader.h"
 
-constexpr char moveSet[] = {'R', 'U', 'F', 'D', 'L', 'B'};
-constexpr char moveSpecSet[] = {' ', '2', char(39)};
+constexpr char moveSet[] = {'R', 'U', 'F', 'D', 'L', 'B'}; // Move-set
+constexpr char moveSpecSet[] = {' ', '2', char(39)};	   // Move-set specialisation
+constexpr int highestScrambleLength = 25;				   // Highest scramble length
+constexpr int lowestScrambleLength = 20;				   // Lowest scramble length
 
 inline bool spacePressed()
 {
@@ -72,16 +74,19 @@ char getOppositeMove(char move)
 
 std::vector<char> scrambler()
 {
-	// Responsible for generation of scramble
-	char previousMove, currentMove; // Variables
-	int moveToDo, moveSpecToDo;		// Indexes for moveSet and moveSpecialisationSet
-	int scramblePt = 1;				// Shows current scramble point
-	int scrambleLength = randomNum(20, 25);
-	std::vector<char> scramble; // Helper scramble vector for generating scramble
+	// This function is responsible for generation of scramble which is of good quality
+	char previousMove, currentMove;	// Variables for holding previously done and current move to be done
+	int moveToDo, moveSpecToDo;	// Indexes for moveSet and moveSpecialisationSet
+	int scramblePt = 1;	// Variable for current scramble point
+	int scrambleLength = randomNum(lowestScrambleLength, highestScrambleLength); // Before generation of scramble, it'll hold randomly generated scramble length between 20 and 25
+	
+	// ! Below is a debug statement, toggle only if you wish to print scramble length before scramble
+	// std::cout<<"("<<scrambleLength<<")"<<" ";
+	std::vector<char> scramble;	// Helper scramble vector for generating scramble
 
 	// Set up initial move and move specialisation
-	moveToDo = randomNum(0, 5);
-	moveSpecToDo = randomNum(0, 2);
+	moveToDo = randomNum(0, 5);		// 0 and 5 are inputs because index of moveSet can vary between 0 and 5.
+	moveSpecToDo = randomNum(0, 2); // 0 and 2 are inputs because index of moveSpecSet can vary between 0 and 2.
 
 	// Push move to scramble vector
 	currentMove = moveSet[moveToDo];
@@ -100,11 +105,11 @@ std::vector<char> scrambler()
 	}
 
 	// Main scramble generation loop
-	while (scramblePt <= scrambleLength)
+	while (scramblePt < scrambleLength)
 	{
 		// Set up initial move and move specialisation
-		moveToDo = randomNum(0, 5);
-		moveSpecToDo = randomNum(0, 2);
+		moveToDo = randomNum(0, 5);		// 0 and 5 are inputs because index of moveSet can vary between 0 and 5.
+		moveSpecToDo = randomNum(0, 2); // 0 and 2 are inputs because index of moveSpecSet can vary between 0 and 2.
 
 		previousMove = currentMove;		 // Make previousMove = currentMove
 		currentMove = moveSet[moveToDo]; // Assign currentMove as new generated move
