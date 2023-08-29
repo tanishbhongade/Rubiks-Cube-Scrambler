@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdio>
-#include "libraries/mainHeader.h"
+#include "../libraries/main_header.h"
 using namespace std;
 
 /*

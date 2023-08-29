@@ -5,7 +5,7 @@
 #include <ctime>
 #include <cstdio>
 #include <vector>
-#include "libraries/mainHeader.h"
+#include "../libraries/main_header.h"
 
 constexpr char moveSet[] = {'R', 'U', 'F', 'D', 'L', 'B'}; // Move-set
 constexpr char moveSpecSet[] = {' ', '2', char(39)};	   // Move-set specialisation
