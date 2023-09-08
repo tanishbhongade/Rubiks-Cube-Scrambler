@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdio>
+#include <fstream>
 #include "../libraries/main_header.h"
 using namespace std;
 
@@ -22,10 +23,15 @@ using namespace std;
 int main()
 {
     char scrambleArray[100];
+    int timeTaken;
+    // std::ofstream file;
+    // file.open("times.txt",std::ios::app);
 
     while (true)
     {
         runTimer(scrambleArray);
+        // file<<scrambleArray<<"::"<<timeTaken<<"\n";
     }
+    // file.close();
     return 0;
 }

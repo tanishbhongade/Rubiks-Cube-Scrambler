@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <windows.h>
 #include <winuser.h>
 #include <cstdlib>
@@ -75,14 +76,14 @@ char getOppositeMove(char move)
 std::vector<char> scrambler()
 {
 	// This function is responsible for generation of scramble which is of good quality
-	char previousMove, currentMove;	// Variables for holding previously done and current move to be done
-	int moveToDo, moveSpecToDo;	// Indexes for moveSet and moveSpecialisationSet
-	int scramblePt = 1;	// Variable for current scramble point
+	char previousMove, currentMove;												 // Variables for holding previously done and current move to be done
+	int moveToDo, moveSpecToDo;													 // Indexes for moveSet and moveSpecialisationSet
+	int scramblePt = 1;															 // Variable for current scramble point
 	int scrambleLength = randomNum(lowestScrambleLength, highestScrambleLength); // Before generation of scramble, it'll hold randomly generated scramble length between 20 and 25
-	
+
 	// ! Below is a debug statement, toggle only if you wish to print scramble length before scramble
 	// std::cout<<"("<<scrambleLength<<")"<<" ";
-	std::vector<char> scramble;	// Helper scramble vector for generating scramble
+	std::vector<char> scramble; // Helper scramble vector for generating scramble
 
 	// Set up initial move and move specialisation
 	moveToDo = randomNum(0, 5);		// 0 and 5 are inputs because index of moveSet can vary between 0 and 5.
@@ -137,13 +138,11 @@ std::vector<char> scrambler()
 		// After completing each move, increment scramblePt
 		scramblePt++;
 	}
-	// After everything, make last character as newline in scramble vector
-	scramble.push_back('\n');
 	// Return scramble vector
 	return scramble;
 }
 
-void phaseOne()
+double phaseOne()
 {
 	// This function is solely responsible for calculating time passed between solve
 	clock_t initialTime = 0; // This variable holds initial time
@@ -168,6 +167,7 @@ void phaseOne()
 		}
 		// After leaving space bar, print time passed.
 		std::cout << "Time passed is " << double(double(finalTime - initialTime) / double(CLOCKS_PER_SEC));
+		return double(double(finalTime - initialTime) / double(CLOCKS_PER_SEC));
 	}
 }
 
@@ -227,12 +227,13 @@ void runTimer(char *scrambleArray)
 	// printScramble(scrambleArray);
 	srand(time(0));
 	std::vector<char> scramble = scrambler();
+	double timeTaken;
 	for (int i = 0; i < scramble.size(); i++)
 	{
 		// Prints scramble
 		std::cout << scramble.at(i);
 	}
-
+	std::cout << "\n";
 	while (rPressed() == false && spacePressed() == false && ePressed() == false)
 	{
 		// While r is not pressed, space is not pressed and e is not pressed, do nothing
@@ -261,6 +262,18 @@ void runTimer(char *scrambleArray)
 	}
 
 	beforeTimerRuns();
-	phaseOne();
+
+	// The below code pushes scramble and solve to external file for more calculations
+	timeTaken = phaseOne();
+	std::ofstream file;
+	file.open("main/times.txt", std::ios::app);
+	for (int i = 0; i < scramble.size(); i++)
+	{
+		file << scramble.at(i);
+	}
+	file << ":: " << timeTaken << "s"
+		 << "\n";
+	file.close();
+
 	phaseTwo();
 }

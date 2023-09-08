@@ -2,7 +2,8 @@
 void doNothing();
 int randomNum();
 std::vector<char> scrambler();
+void beforeTimerRuns();
 void runTimer(char *);
 void phaseTwo();
 void printScramble(char *);
-void phaseOne();
+double phaseOne();
