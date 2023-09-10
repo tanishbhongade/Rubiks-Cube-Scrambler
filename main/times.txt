@@ -1,0 +1,4 @@
+R2 D R2 U2 R' F2 L' U' L2 U B' L2 D2 B' L2 B L' D' F2 L' F2 L F' :: 1.003s
+F' U' B' R2 F2 L' F2 L F U' F2 U' B2 U F D R' D' L2 U' B2 U F :: 14.896s
+L2 F R' B2 L2 D' L' F2 D' R' F D' F' L2 F2 L2 D2 R B2 L D2 B2 :: 14.89s
+D' L2 F U2 L U L F' D R B' R' D2 F2 U B' R D' F R' D L' D2 :: 17.45s
